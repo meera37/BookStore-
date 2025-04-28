@@ -27,7 +27,7 @@ function EditProfile() {
             <label htmlFor="profilefile">
               <input id='profilefile' type="file" style={{ display: 'none' }} />
               <img className='z-52' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR81iX4Mo49Z3oCPSx-GtgiMAkdDop2uVmVvw&s" alt="no image" style={{ width: '90px', height: '90px'}} />
-            <div className='bg-yellow-300 text-white z-53 fixed rounded py-2 px-3' style={{marginLeft:'80px', marginTop:'-40px'}}><FontAwesomeIcon icon={faPen} className=''/></div>
+            <div className='bg-yellow-300 text-white z-53 fixed rounded py-1 px-2' style={{marginLeft:'80px', marginTop:'-30px'}}><FontAwesomeIcon icon={faPen} className=''/></div>
             </label>
 
             <div className="mb-3 mt-5 w-full px-5">
