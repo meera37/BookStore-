@@ -1,15 +1,101 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import Footer from '../../components/Footer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck, faSquarePlus } from '@fortawesome/free-solid-svg-icons'
 import EditProfile from '../components/EditProfile'
+import { toast, ToastContainer } from 'react-toastify'
+import { uploadBookApi } from '../../services/allApi'
 
 function Profile() {
 
     const [sellstatus, setsellstatus] = useState(true)
     const [bookstatus, setbookstatus] = useState(false)
     const [purchaseStatus, setpurchaseStatus] = useState(false)
+    const [bookDetails, setBookDetails] = useState({
+        title: "", author: "", noofpages: "", imageurl: "", price: "", dprice: "", abstract: "", publisher: "", language: "", isbn: "", category: "",
+        uploadedImages: []
+
+    })
+    const [preview, setpreview] = useState("")
+    const [previewList, setpreviewList] = useState([])
+    const [token, setToken] = useState("")
+
+    console.log(bookDetails);
+
+    const handleUpload = (e) => {
+        console.log(e.target.files[0]);
+
+        const fileArray = bookDetails.uploadedImages
+        fileArray.push(e.target.files[0])
+        setBookDetails({ ...bookDetails, uploadedImages: fileArray })
+
+        const url = URL.createObjectURL(e.target.files[0])  //to convert file object into url
+        console.log(url);
+
+        setpreview(url)
+
+        const newArray = previewList
+        newArray.push(url)
+        setpreviewList(newArray)
+    }
+
+    const handleReset = () => {
+        setBookDetails({
+            title: "", author: "", noofpages: "", imageurl: "", price: "", dprice: "", abstract: "", publisher: "", language: "", isbn: "", category: "",
+            uploadedImages: []
+        })
+        setpreview("")
+        setpreviewList([])
+    }
+
+    const handleSubmit = async () => {
+        const { title, author, noofpages, imageurl, price, dprice, abstract, publisher, language, isbn, category, uploadedImages } = bookDetails
+
+        if (!title || !author || !noofpages, !imageurl || !price || !dprice || !abstract || !publisher || !language || !isbn || !category || uploadedImages.length == 0) {
+            toast.info('Please fill fields completely')
+        }
+        else {
+            const reqHeader = {
+                "Authorization": `Bearer ${token}`
+            }
+
+            const reqBody = new FormData()
+
+            for (let key in bookDetails) {             //or can append each item individually
+                if (key != 'uploadedImages') {
+                    reqBody.append(key, bookDetails[key])
+                }
+                else {
+                    bookDetails.uploadedImages.forEach((item) => {
+                        reqBody.append("uploadedImages", item)
+                    })
+                }
+            }
+
+            const result = await uploadBookApi(reqBody, reqHeader)
+            console.log(result);
+
+            if(result.status ==401){
+                toast.warning(result.response.data)
+                handleReset()
+            }
+            else if(result.status ==200){
+                toast.success('Book Added Successfully')
+                handleReset()
+            }
+            else{
+                toast.error('Something went wrong')
+                handleReset()
+            }
+        }
+    }
+
+    useEffect(() => {
+        if (sessionStorage.getItem("token")) {
+            setToken(sessionStorage.getItem("token"))
+        }
+    }, [])
 
     return (
         <>
@@ -50,28 +136,36 @@ function Profile() {
                             <div className='px-3'>
 
                                 <div className="mb-3">
-                                    <input type="text" placeholder='Title' className='p-2 bg-white border border-gray-200 rounded placeholder-gray-400 w-full ' />
+                                    <input type="text" value={bookDetails.title} placeholder='Title' className='p-2 bg-white border border-gray-200 rounded placeholder-gray-400 w-full '
+                                        onChange={(e) => setBookDetails({ ...bookDetails, title: e.target.value })} />
                                 </div>
                                 <div className="mb-3">
-                                    <input type="text" placeholder='Author' className='p-2 bg-white border border-gray-200 rounded placeholder-gray-400 w-full' />
+                                    <input type="text" value={bookDetails.author} placeholder='Author' className='p-2 bg-white border border-gray-200 rounded placeholder-gray-400 w-full'
+                                        onChange={(e) => setBookDetails({ ...bookDetails, author: e.target.value })} />
                                 </div>
                                 <div className="mb-3">
-                                    <input type="text" placeholder='No. of pages' className='p-2 bg-white border border-gray-200 rounded placeholder-gray-400 w-full' />
+                                    <input type="text" value={bookDetails.noofpages} placeholder='No. of pages' className='p-2 bg-white border border-gray-200 rounded placeholder-gray-400 w-full'
+                                        onChange={(e) => setBookDetails({ ...bookDetails, noofpages: e.target.value })} />
                                 </div>
                                 <div className="mb-3">
-                                    <input type="text" placeholder='Image Url' className='p-2 bg-white border border-gray-200 rounded placeholder-gray-400 w-full' />
+                                    <input type="text" value={bookDetails.imageurl} placeholder='Image Url' className='p-2 bg-white border border-gray-200 rounded placeholder-gray-400 w-full'
+                                        onChange={(e) => setBookDetails({ ...bookDetails, imageurl: e.target.value })} />
                                 </div>
                                 <div className="mb-3">
-                                    <input type="text" placeholder='Price' className='p-2 bg-white border border-gray-200 rounded placeholder-gray-400 w-full' />
+                                    <input type="text" value={bookDetails.price} placeholder='Price' className='p-2 bg-white border border-gray-200 rounded placeholder-gray-400 w-full'
+                                        onChange={(e) => setBookDetails({ ...bookDetails, price: e.target.value })} />
                                 </div>
                                 <div className="mb-3">
-                                    <input type="text" placeholder='Discount Price' className='p-2 bg-white border border-gray-200 rounded placeholder-gray-400 w-full' />
+                                    <input type="text" value={bookDetails.dprice} placeholder='Discount Price' className='p-2 bg-white border border-gray-200 rounded placeholder-gray-400 w-full'
+                                        onChange={(e) => setBookDetails({ ...bookDetails, dprice: e.target.value })} />
                                 </div>
+                                {/* <div className="mb-3">
+                                    <input type="text" value={bookDetails.imageurl} placeholder='Image Url' className='p-2 bg-white border border-gray-200 rounded placeholder-gray-400 w-full'
+                                        onChange={(e) => setBookDetails({ ...bookDetails, imageurl: e.target.value })} />
+                                </div> */}
                                 <div className="mb-3">
-                                    <input type="text" placeholder='Image Url' className='p-2 bg-white border border-gray-200 rounded placeholder-gray-400 w-full' />
-                                </div>
-                                <div className="mb-3">
-                                    <textarea rows={5} placeholder='Abstract' className='p-2 bg-white border border-gray-200 rounded placeholder-gray-400 w-full'></textarea>
+                                    <textarea rows={5} value={bookDetails.abstract} placeholder='Abstract' className='p-2 bg-white border border-gray-200 rounded placeholder-gray-400 w-full'
+                                        onChange={(e) => setBookDetails({ ...bookDetails, abstract: e.target.value })}></textarea>
                                 </div>
 
 
@@ -79,37 +173,51 @@ function Profile() {
                             </div>
                             <div className='px-3'>
                                 <div className="mb-3">
-                                    <input type="text" placeholder='Publisher' className='p-2 bg-white border border-gray-200 rounded placeholder-gray-400 w-full' />
+                                    <input type="text" value={bookDetails.publisher} placeholder='Publisher' className='p-2 bg-white border border-gray-200 rounded placeholder-gray-400 w-full'
+                                        onChange={(e) => setBookDetails({ ...bookDetails, publisher: e.target.value })} />
                                 </div>
                                 <div className="mb-3">
-                                    <input type="text" placeholder='Language' className='p-2 bg-white border border-gray-200 rounded placeholder-gray-400 w-full' />
+                                    <input type="text" value={bookDetails.language} placeholder='Language' className='p-2 bg-white border border-gray-200 rounded placeholder-gray-400 w-full'
+                                        onChange={(e) => setBookDetails({ ...bookDetails, language: e.target.value })} />
                                 </div>
                                 <div className="mb-3">
-                                    <input type="text" placeholder='ISBN' className='p-2 bg-white border border-gray-200 rounded placeholder-gray-400 w-full' />
+                                    <input type="text" value={bookDetails.isbn} placeholder='ISBN' className='p-2 bg-white border border-gray-200 rounded placeholder-gray-400 w-full'
+                                        onChange={(e) => setBookDetails({ ...bookDetails, isbn: e.target.value })} />
                                 </div>
                                 <div className="mb-3">
-                                    <input type="text" placeholder='Category' className='p-2 bg-white border border-gray-200 rounded placeholder-gray-400 w-full' />
+                                    <input type="text" value={bookDetails.category} placeholder='Category' className='p-2 bg-white border border-gray-200 rounded placeholder-gray-400 w-full'
+                                        onChange={(e) => setBookDetails({ ...bookDetails, category: e.target.value })} />
                                 </div>
 
                                 <div className="mb-3 flex justify-center items-center w-full mt-10">
-                                    <label htmlFor="imagefile">
-                                        <input id='imagefile' type="file" style={{ display: 'none' }} />
+                                    {!preview ? <label htmlFor="imagefile">
+                                        <input id='imagefile' type="file" style={{ display: 'none' }} onChange={(e) => handleUpload(e)} />
                                         <img src="https://www.freeiconspng.com/thumbs/upload-icon/upload-icon-31.png" alt="no image" style={{ width: '200px', height: '200px' }} />
                                     </label>
+                                        :
+                                        <img src={preview} alt="no image" style={{ width: '200px', height: '200px' }} />
+
+                                    }
 
                                 </div>
 
-                                <div className='flex justify-center items-center'>
-                                    <img src="https://blog-cdn.reedsy.com/directories/gallery/248/large_65b0ae90317f7596d6f95bfdd6131398.jpg" alt="no image" style={{ width: '70px', height: '70px' }} />
-                                    <FontAwesomeIcon icon={faSquarePlus} className='fa-2x shadow ms-3 text-gray-500' />
-                                </div>
+                                {preview && <div className='flex justify-center items-center'>
+                                    {previewList?.map((item) => (
+                                        <img src={item} alt="no image" style={{ width: '70px', height: '70px' }} />
+                                    ))}
+                                    {previewList.length < 3 && <label htmlFor="imagefile">
+                                        <input id='imagefile' type="file" style={{ display: 'none' }} onChange={(e) => handleUpload(e)} />
+                                        <FontAwesomeIcon icon={faSquarePlus} className='fa-2x shadow ms-3 text-gray-500' />
+
+                                    </label>}
+                                </div>}
 
                             </div>
                         </div>
 
                         <div className='pt-5 flex justify-end'>
-                            <button className='bg-amber-600 rounded text-black p-2 hover:bg-white hover:border hover:border-amber-600 hover:text-amber-600'>Reset</button>
-                            <button className='bg-green-800 text-white rounded p-2 ms-4  hover:bg-white hover:border hover:border-green-600 hover:text-green-600'>Submit</button>
+                            <button onClick={handleReset} className='bg-amber-600 rounded text-black p-2 hover:bg-white hover:border hover:border-amber-600 hover:text-amber-600'>Reset</button>
+                            <button onClick={handleSubmit} className='bg-green-800 text-white rounded p-2 ms-4  hover:bg-white hover:border hover:border-green-600 hover:text-green-600'>Submit</button>
                         </div>
 
                     </div>
@@ -126,15 +234,15 @@ function Profile() {
                                 <h3 className='text-blue-600'>$13</h3>
                                 <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque commodi iusto eaque quam ea quasi et temporibus architecto? Exercitationem esse sit culpa veritatis necessitatibus aperiam perspiciatis, voluptates voluptas hic non! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem, reprehenderit eaque dolores amet mollitia deserunt non architecto nisi? Dolor hic deleniti accusamus expedita! Saepe sint, porro minus ex molestias aperiam.</p>
                                 <div className='flex'>
-<img src="https://www.psdstamps.com/wp-content/uploads/2022/04/round-pending-stamp-png.png" alt="no image" style={{width:'70px',height:'70px'}} />
-<img src="https://toppng.com/uploads/preview/round-approved-green-postage-stamp-11642625401zch43bcd4q.png" alt="no image" style={{width:'70px',height:'70px'}} />
-<img src="https://cdn-icons-png.flaticon.com/512/6188/6188726.png" alt="no image" style={{width:'70px',height:'70px'}} />
+                                    <img src="https://www.psdstamps.com/wp-content/uploads/2022/04/round-pending-stamp-png.png" alt="no image" style={{ width: '70px', height: '70px' }} />
+                                    <img src="https://toppng.com/uploads/preview/round-approved-green-postage-stamp-11642625401zch43bcd4q.png" alt="no image" style={{ width: '70px', height: '70px' }} />
+                                    <img src="https://cdn-icons-png.flaticon.com/512/6188/6188726.png" alt="no image" style={{ width: '70px', height: '70px' }} />
                                 </div>
                             </div>
 
 
                             <div className='px-4'>
-                                <img src="https://www.designforwriters.com/wp-content/uploads/2017/10/design-for-writers-book-cover-tf-2-a-million-to-one.jpg" alt="no image" className='w-full' style={{height:'250px'}} />
+                                <img src="https://www.designforwriters.com/wp-content/uploads/2017/10/design-for-writers-book-cover-tf-2-a-million-to-one.jpg" alt="no image" className='w-full' style={{ height: '250px' }} />
                                 <div className='flex justify-end mt-4'>
                                     <button className='p-2 rounded bg-red-600 text-white hover:bg-gray-200 hover:text-red-600 hover:border hover:border-red-600'>Delete</button>
                                 </div>
@@ -144,7 +252,7 @@ function Profile() {
 
 
                     <div className='flex justify-center items-center flex-col '>
-                        <img src="https://i.pinimg.com/originals/b4/13/34/b41334a036d6796c281a6e5cbb36e4b5.gif" alt="" style={{width:'200px',height:'200px'}} />
+                        <img src="https://i.pinimg.com/originals/b4/13/34/b41334a036d6796c281a6e5cbb36e4b5.gif" alt="" style={{ width: '200px', height: '200px' }} />
                         <p className='text-red-600 text-2xl'>No Book Added Yet</p>
                     </div>
                 </div>}
@@ -158,15 +266,15 @@ function Profile() {
                                 <h3 className='text-blue-600'>$13</h3>
                                 <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque commodi iusto eaque quam ea quasi et temporibus architecto? Exercitationem esse sit culpa veritatis necessitatibus aperiam perspiciatis, voluptates voluptas hic non! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem, reprehenderit eaque dolores amet mollitia deserunt non architecto nisi? Dolor hic deleniti accusamus expedita! Saepe sint, porro minus ex molestias aperiam.</p>
                                 <div className='flex'>
-<img src="https://www.psdstamps.com/wp-content/uploads/2022/04/round-pending-stamp-png.png" alt="no image" style={{width:'70px',height:'70px'}} />
-<img src="https://toppng.com/uploads/preview/round-approved-green-postage-stamp-11642625401zch43bcd4q.png" alt="no image" style={{width:'70px',height:'70px'}} />
-<img src="https://cdn-icons-png.flaticon.com/512/6188/6188726.png" alt="no image" style={{width:'70px',height:'70px'}} />
+                                    <img src="https://www.psdstamps.com/wp-content/uploads/2022/04/round-pending-stamp-png.png" alt="no image" style={{ width: '70px', height: '70px' }} />
+                                    <img src="https://toppng.com/uploads/preview/round-approved-green-postage-stamp-11642625401zch43bcd4q.png" alt="no image" style={{ width: '70px', height: '70px' }} />
+                                    <img src="https://cdn-icons-png.flaticon.com/512/6188/6188726.png" alt="no image" style={{ width: '70px', height: '70px' }} />
                                 </div>
                             </div>
 
 
                             <div className='px-4'>
-                                <img src="https://www.designforwriters.com/wp-content/uploads/2017/10/design-for-writers-book-cover-tf-2-a-million-to-one.jpg" alt="no image" className='w-full' style={{height:'250px'}} />
+                                <img src="https://www.designforwriters.com/wp-content/uploads/2017/10/design-for-writers-book-cover-tf-2-a-million-to-one.jpg" alt="no image" className='w-full' style={{ height: '250px' }} />
                                 <div className='flex justify-end mt-4'>
                                     <button className='p-2 rounded bg-red-600 text-white hover:bg-gray-200 hover:text-red-600 hover:border hover:border-red-600'>Delete</button>
                                 </div>
@@ -176,13 +284,14 @@ function Profile() {
 
 
                     <div className='flex justify-center items-center flex-col '>
-                        <img src="https://i.pinimg.com/originals/b4/13/34/b41334a036d6796c281a6e5cbb36e4b5.gif" alt="" style={{width:'200px',height:'200px'}} />
+                        <img src="https://i.pinimg.com/originals/b4/13/34/b41334a036d6796c281a6e5cbb36e4b5.gif" alt="" style={{ width: '200px', height: '200px' }} />
                         <p className='text-red-600 text-2xl'>No Book Purchased Yet</p>
                     </div>
-                    </div>}
+                </div>}
 
             </div>
 
+            <ToastContainer theme='colored' position='top-center' autoClose={2000} />
             <Footer />
         </>
     )

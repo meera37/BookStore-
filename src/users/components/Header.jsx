@@ -10,7 +10,7 @@ function Header() {
   const [dropdownstatus,setdropdownStatus]=useState(false)
 const [token, setToken] = useState("")
 
-console.log(token);
+//console.log(token);
 
 useEffect(()=>{
 
@@ -48,7 +48,7 @@ useEffect(()=>{
 
  <div className="relative inline-block text-left">
   <div>
-    <button onClick={()=>setdropdownStatus(!dropdownstatus)} type="button" class="inline-flex w-full justify-center items-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs hover:bg-gray-50" id="menu-button" aria-expanded="true" aria-haspopup="true">
+    <button onClick={()=>setdropdownStatus(!dropdownstatus)} type="button" className="inline-flex w-full justify-center items-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs hover:bg-gray-50" id="menu-button" aria-expanded="true" aria-haspopup="true">
 
     <img src="https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg" alt="no image" style={{width:'50px',height:'50px'}} className='mx-2'  />   
     </button>

@@ -13,6 +13,7 @@ import AdminHome from './admin/page/AdminHome'
 import AdminBooks from './admin/page/AdminBooks'
 import AdminCareers from './admin/page/AdminCareers'
 import AdminSettings from './admin/page/AdminSettings'
+import ViewBook from './users/pages/ViewBook'
 
 function App() {
 
@@ -32,6 +33,8 @@ function App() {
         <Route path='/login' element={<Auth />} />
         <Route path='/register' element={<Auth register/>} />
         <Route path='/all-Books' element={<AllBooks/>} />
+        <Route path='/view-books/:id' element={<ViewBook/>} />
+        
         <Route path='/careers' element={<Careers/>} />
         <Route path='/contact' element={<Contact/>} />
         <Route path='/profile' element={<Profile/>} />

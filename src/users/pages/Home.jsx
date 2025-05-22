@@ -1,12 +1,59 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Header from '../components/Header'
 import Footer from '../../components/Footer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { homeBookApi } from '../../services/allApi'
+import { searchKeyContext } from '../../context/Contextshare'
+import { toast, ToastContainer } from 'react-toastify'
 
 
 function Home() {
+
+  const [homeBook, setHomeBook] = useState([])
+ const {searchkey,setsearchkey} = useContext(searchKeyContext)
+  const navigate = useNavigate()
+
+  const getAllHomeBook = async()=>{
+    const result = await homeBookApi()
+   // console.log(result);
+    if(result.status == 200){
+      setHomeBook(result.data)
+    } 
+  }
+
+  const handleSearch = ()=>{
+    console.log('inside handleSearch');
+    const token = sessionStorage.getItem("token")
+  
+
+    if(searchkey == ""){
+      toast.info('Please enter the title of book')
+    }
+    else if(!token){
+      toast.info('Please login')
+      setTimeout(() => {
+              navigate('/login')
+
+      }, 2500);
+    }
+    else if(searchkey && token){
+      navigate('/all-Books')
+    }
+    else{
+      toast.error('Something went wrong')
+    }
+    
+  }
+
+  //console.log(homeBook);
+  
+useEffect(()=>{
+  setsearchkey("")
+  getAllHomeBook()
+},[])
+
   return (
     <>
       <Header />
@@ -19,8 +66,8 @@ function Home() {
               <h1 className='text-5xl'>Wonderful Gifts</h1>
               <p>Give your family and friends a book</p>
               <div className='flex mt-10 w-full' >
-                <input type="text" placeholder='Search Books' className='py-2 px-4 bg-white rounded-3xl placeholder-gray-400 w-full' />
-                <FontAwesomeIcon icon={faMagnifyingGlass} className='text-blue-800' style={{ marginTop: '11px', marginLeft: '-30px' }} />
+                <input type="text" placeholder='Search Books' className='py-2 px-4 bg-white text-black rounded-3xl placeholder-gray-400 w-full' onChange={(e)=>setsearchkey(e.target.value)} />
+                <FontAwesomeIcon icon={faMagnifyingGlass} className='text-blue-800' style={{ marginTop: '11px', marginLeft: '-30px' }} onClick={handleSearch} />
               </div>
             </div>
             <div></div>
@@ -34,42 +81,23 @@ function Home() {
         <h4 className='text-2xl'>Explore Our Latest Collections</h4>
 
         <div className='md:grid grid-cols-4 w-full mt-5 gap-5'>
-          <div className='p-3 shadow-md'>
-            <img src="https://m.media-amazon.com/images/I/81l3rZK4lnL.jpg" alt="no image" style={{width:'100%', height:'300px'}} />
+          {
+            homeBook?.length>0?
+            homeBook?.map((item)=>(
+              <div className='p-3 shadow-md'>
+            <img src={item?.imageurl} alt="no image" style={{width:'100%', height:'300px'}} />
            
            <div className='flex justify-center items-center flex-col mt-3'>
-              <p className='text-blue-700'>Dan Brown</p>
-              <h3>The Da Vinci Code</h3>
-              <p>$18</p>
+              <p className='text-blue-700'>{item?.author}</p>
+              <h3>{item?.title}</h3>
+              <p>$ {item?.dprice}</p>
            </div>
           </div>
-          <div className='p-3 shadow-md'>
-            <img src="https://m.media-amazon.com/images/I/81l3rZK4lnL.jpg" alt="no image" style={{width:'100%', height:'300px'}} />
-           
-           <div className='flex justify-center items-center flex-col mt-3'>
-              <p className='text-blue-700'>Dan Brown</p>
-              <h3>The Da Vinci Code</h3>
-              <p>$18</p>
-           </div>
-          </div>
-          <div className='p-3 shadow-md'>
-            <img src="https://m.media-amazon.com/images/I/81l3rZK4lnL.jpg" alt="no image" style={{width:'100%', height:'300px'}} />
-           
-           <div className='flex justify-center items-center flex-col mt-3'>
-              <p className='text-blue-700'>Dan Brown</p>
-              <h3>The Da Vinci Code</h3>
-              <p>$18</p>
-           </div>
-          </div>
-          <div className='p-3 shadow-md'>
-            <img src="https://m.media-amazon.com/images/I/81l3rZK4lnL.jpg" alt="no image" style={{width:'100%', height:'300px'}} />
-           
-           <div className='flex justify-center items-center flex-col mt-3'>
-              <p className='text-blue-700'>Dan Brown</p>
-              <h3>The Da Vinci Code</h3>
-              <p>$18</p>
-           </div>
-          </div>
+            ))
+            :
+            <p>Loading...</p>
+          }
+         
         </div>
 
 <div className="flex justify-center items-center my-5">
@@ -161,6 +189,8 @@ function Home() {
 <h6 className='mt-3'>Treesa Joseph</h6>
 <p className='mt-3'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Error, laboriosam! Alias ea illum quo omnis culpa repellat magni eum exercitationem. At suscipit illum perspiciatis reiciendis, veritatis ea quasi eveniet sunt.Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere recusandae deserunt voluptates natus, corporis hic, quis porro totam id magni voluptatibus. Natus laudantium et aliquam ea, quisquam maiores fugiat minus?</p>
 </div>
+
+<ToastContainer position='top-center' theme='colored' autoClose={2000} />
       <Footer />
     </>
   )
