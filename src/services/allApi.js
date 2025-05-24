@@ -27,6 +27,8 @@ export const getAllJobsApi = async(searchKey)=>{
     return await commonApi('GET',`${serverUrl}/all-jobs?search=${searchKey}`)
 }
 
+
+
 // --------------------------------------------
 //                  users
 
@@ -44,6 +46,11 @@ export const getAllBookApi = async(searchkey,reqHeader)=>{
 //api to view a book
 export const viewABookApi = async(id)=>{
     return await commonApi('GET',`${serverUrl}/view-book/${id}`)//path parameter
+}
+
+//api to add application
+export const addApplicationApi = async(reqBody,reqHeader)=>{
+    return await commonApi('POST',`${serverUrl}/apply-job`,reqBody, reqHeader)
 }
 
 //-----------------------------------------------------------------------------------------
@@ -73,4 +80,14 @@ export const addJobApi = async(reqBody)=>{
 //api to delete a job
 export const deleteJobApi = async(id)=>{
     return await commonApi('DELETE',`${serverUrl}/delete-job/${id}`)
+}
+
+//api to get all applications
+export const getallApplications = async()=>{
+    return await commonApi('GET',`${serverUrl}/all-application`)
+}
+
+//api to update the profile
+export const updateProfileApi = async(reqBody,reqHeader)=>{
+    return await commonApi('PUT',`${serverUrl}/admin-profile-update`,reqBody,reqHeader)
 }

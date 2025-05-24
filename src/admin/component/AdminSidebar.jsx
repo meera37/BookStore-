@@ -1,14 +1,21 @@
 import { faBagShopping, faBook, faGear, faHouse } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { serverUrl } from '../../services/serverUrl'
+import { adminProfileUpdateStatusContext } from '../../context/Contextshare'
 
 function AdminSidebar() {
 const [homeStatus,setHomeStatus] = useState(false)
 const [bookStatus,setBookStatus] = useState(false)
 const [CareersStatus,setCareersStatus] = useState(false)
 const [settingsStatus,setSettingsStatus] = useState(false)
+const [adminD, setadminD] = useState({
+    username:"",
+    profile:""
+})
 
+const {adminProfileUpdateStatus}=useContext(adminProfileUpdateStatusContext)
     const navigate = useNavigate()
 
     const filter = (data)=>{
@@ -48,15 +55,18 @@ const [settingsStatus,setSettingsStatus] = useState(false)
             console.log('no such page');
             
         }
+
+        const user = JSON.parse(sessionStorage.getItem("existingUser"))
+        setadminD({username:user.username, profile:user.profile})
     },
-        [])
+        [adminProfileUpdateStatus])
 
   return (
     <>
     <div className=''>
-        <img src="https://cdn-icons-png.freepik.com/512/8742/8742495.png" alt="no image" style={{width:'150px',height:'150px'}} />
+        <img src={adminD.profile==""?"https://cdn-icons-png.freepik.com/512/8742/8742495.png":`${serverUrl}/upload/${adminD.profile}`} alt="no image" style={{width:'150px',height:'150px',borderRadius:'50%'}} />
     
-    <h1 className='mt-5'>Username</h1>
+    <h1 className='mt-5 text-center'>{adminD.username}</h1>
 
     <div className='my-5'>
 <div className="mb-3">

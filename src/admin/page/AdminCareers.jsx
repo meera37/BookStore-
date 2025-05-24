@@ -4,8 +4,10 @@ import AdminHeader from '../component/AdminHeader'
 import AdminSidebar from '../component/AdminSidebar'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLocationDot, faTrash, faXmark } from '@fortawesome/free-solid-svg-icons'
-import { addJobApi, deleteJobApi, getAllJobsApi } from '../../services/allApi'
+import { addJobApi, deleteJobApi, getallApplications, getAllJobsApi } from '../../services/allApi'
 import { toast, ToastContainer } from 'react-toastify'
+import { Link } from 'react-router-dom'
+import { serverUrl } from '../../services/serverUrl'
 
 function AdminCareers() {
 
@@ -15,6 +17,7 @@ function AdminCareers() {
   const [addJobStatus, setaddJobStatus] = useState({})
   const [searchKey,setsearchKey] = useState("")
 const [deleteJobStatus, setDeleteJobStatus] = useState({})
+const [allapplication,setAllApplication] = useState([])
 
   const [jobForm,setjobForm] = useState({
     title:"", location:"", jType:"", salary:"", qualification:"", experience:"", description:""
@@ -121,9 +124,28 @@ if(result.status == 200){
 }
 }
 
+//get all apllications
+const getAllApplication = async()=>{
+  const result = await getallApplications()
+  //console.log(result);
+  if(result.status == 200){
+setAllApplication(result.data)
+  }
+}
+console.log(allapplication);
+
+
 useEffect(()=>{
-getAllJobs(searchKey)
-},[addJobStatus,searchKey, deleteJobStatus])
+if(jobpoststatus ==true){
+  getAllJobs(searchKey)
+}else if(newapplicantstatus == true){
+  getAllApplication(true)
+}
+else{
+  console.log('something went wrong');
+  
+}
+},[addJobStatus,searchKey, deleteJobStatus,newapplicantstatus])
 
   return (
     <>
@@ -236,26 +258,38 @@ getAllJobs(searchKey)
               <input type="text" placeholder='Job Title' className='px-4 py-2 border border-gray-400 placeholder-gray-400 md:w-1/4 w-1/2 shadow' />
               <button className='bg-green-700 text-white px-4 py-2 shadow hover:border hover:border-green-700 hover:text-green-700 hover:bg-white'>Search</button>
             </div>
-            <table className='mx-3 w-full border border-gray-400'>
+            {allapplication?.length>0?<table className='mx-5 my-5 w-full border border-gray-400'>
               <thead>
                 <tr className='text-white bg-blue-600'>
-                  <th className='p-2'>Sl.no</th>
-                  <th>Job Title</th>
-                  <th>Name</th>
-                  <th>Qualification</th>
-                  <th>Email</th>
-                  <th>Phone</th>
-                  <th>Cover letter</th>
-                  <th>Resume</th>
+                  <th className='p-3 border border-gray-500'>Sl.no</th>
+                  <th className='p-3 border border-gray-500'>Job Title</th>
+                  <th className='p-3 border border-gray-500'>Name</th>
+                  <th className='p-3 border border-gray-500'>Qualification</th>
+                  <th className='p-3 border border-gray-500'>Email</th>
+                  <th className='p-3 border border-gray-500'>Phone</th>
+                  <th className='p-3 border border-gray-500'>Cover letter</th>
+                  <th className='p-3 border border-gray-500'>Resume</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>2</td>
+                
+                { allapplication?.map((item, index)=>(
+<tr key={index}>
+                  <td className='border border-gray-500 p-2'>{index+1}</td>
+                  <td className='border border-gray-500 p-2'>{item?.jobtitle}</td>
+                  <td className='border border-gray-500 p-2'>{item?.fullname}</td>
+                  <td className='border border-gray-500 p-2'>{item?.qualification}</td>
+                  <td className='border border-gray-500 p-2'>{item?.email}</td>
+                  <td className='border border-gray-500 p-2'>{item?.phone}</td>
+                  <td className='border border-gray-500 p-2'>{item?.coverletter}</td>
+                  <td className='border border-gray-500 p-2'><Link to={`${serverUrl}/pdfUploads/${item?.resume}`} className='text-blue-600 underline' target='_blank'>resume</Link></td>
+
                 </tr>
+                ))}
               </tbody>
-            </table>
+            </table> :
+            <p>No application yet</p>
+            }
           </div>}
         </div>
       </div>

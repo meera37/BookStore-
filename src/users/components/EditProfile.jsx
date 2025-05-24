@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 function EditProfile() {
 
   const [offcanvasStatus, setOffCanvasStatus] = useState(false)
-
+  
   return (
     <>
       <div>
