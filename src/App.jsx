@@ -14,6 +14,8 @@ import AdminBooks from './admin/page/AdminBooks'
 import AdminCareers from './admin/page/AdminCareers'
 import AdminSettings from './admin/page/AdminSettings'
 import ViewBook from './users/pages/ViewBook'
+import Paymentsuccess from './users/pages/Paymentsuccess'
+import Paymenterror from './users/pages/Paymenterror'
 
 function App() {
 
@@ -27,29 +29,32 @@ function App() {
 
   return (
     <>
-      
+
       <Routes>
         <Route path='/' element={isloading ? <Home /> : <Preloader />} />
         <Route path='/login' element={<Auth />} />
-        <Route path='/register' element={<Auth register/>} />
-        <Route path='/all-Books' element={<AllBooks/>} />
-        <Route path='/view-books/:id' element={<ViewBook/>} />
-        
-        <Route path='/careers' element={<Careers/>} />
-        <Route path='/contact' element={<Contact/>} />
-        <Route path='/profile' element={<Profile/>} />
+        <Route path='/register' element={<Auth register />} />
+        <Route path='/all-Books' element={<AllBooks />} />
+        <Route path='/view-books/:id' element={<ViewBook />} />
 
-        <Route path='/admin-home' element={isloading ?<AdminHome/>: <Preloader />} />
-        <Route path='/admin-books' element={<AdminBooks/>} />
-        <Route path='/admin-careers' element={<AdminCareers/>} />
-        <Route path='/admin-settings' element={<AdminSettings/>} />
+        <Route path='/careers' element={<Careers />} />
+        <Route path='/contact' element={<Contact />} />
+        <Route path='/profile' element={<Profile />} />
+
+        <Route path='/admin-home' element={isloading ? <AdminHome /> : <Preloader />} />
+        <Route path='/admin-books' element={<AdminBooks />} />
+        <Route path='/admin-careers' element={<AdminCareers />} />
+        <Route path='/admin-settings' element={<AdminSettings />} />
+
+        <Route path='/payment-success' element={<Paymentsuccess />} />
+        <Route path='/payment-error' element={<Paymenterror />} />
 
 
 
         <Route path='*' element={<PageNotFound />} />
 
       </Routes>
-      
+
     </>
   )
 }

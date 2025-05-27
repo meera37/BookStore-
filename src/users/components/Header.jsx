@@ -1,26 +1,42 @@
 import { faFacebook, faInstagram, faXTwitter } from '@fortawesome/free-brands-svg-icons'
 import { faAddressCard, faBars, faPowerOff, faUser } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useContext, useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { userProfileUpdateStatusContext } from '../../context/Contextshare'
+import { serverUrl } from '../../services/serverUrl'
 
 function Header() {
 
   const [status, setStatus] = useState(false)
   const [dropdownstatus,setdropdownStatus]=useState(false)
 const [token, setToken] = useState("")
+const [userD,setUserD] = useState({
+  profile:""
+})
 
 //console.log(token);
+
+const {userProfileUpdateStatus} = useContext(userProfileUpdateStatusContext)
+
+const navigate = useNavigate()
+
+const logout =()=>{
+  sessionStorage.removeItem("existingUser")
+    sessionStorage.removeItem("token")
+   setToken("")
+    navigate('/')
+}
 
 useEffect(()=>{
 
   if(sessionStorage.getItem("token")){
     const token = sessionStorage.getItem("token")
     setToken(token)
+    const user = JSON.parse(sessionStorage.getItem('existingUser'))
+    setUserD({profile:user.profile})
   }
-},[])
-
-
+},[userProfileUpdateStatus])
 
   return (
     <>
@@ -50,7 +66,7 @@ useEffect(()=>{
   <div>
     <button onClick={()=>setdropdownStatus(!dropdownstatus)} type="button" className="inline-flex w-full justify-center items-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs hover:bg-gray-50" id="menu-button" aria-expanded="true" aria-haspopup="true">
 
-    <img src="https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg" alt="no image" style={{width:'50px',height:'50px'}} className='mx-2'  />   
+    <img src={userD.profile == ''?"https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg" :`${serverUrl}/upload/${userD.profile}`}alt="no image" style={{width:'50px',height:'50px'}} className='mx-2 rounded-full'  />   
     </button>
   </div>
 
@@ -59,7 +75,7 @@ useEffect(()=>{
     <div className="py-1" role="none">
      
       <Link to={'/profile'}><p className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="menu-item-0"> <FontAwesomeIcon icon={faAddressCard} className='me-2' />Profile</p></Link>
-      <button className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="menu-item-1"><FontAwesomeIcon icon={faPowerOff} className='me-2' />Logout</button>
+      <button onClick={logout} className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="menu-item-1"><FontAwesomeIcon icon={faPowerOff} className='me-2' />Logout</button>
      
     </div>
   </div>}
@@ -82,8 +98,8 @@ useEffect(()=>{
  <div className="relative inline-block text-left">
   <div>
     <button onClick={()=>setdropdownStatus(!dropdownstatus)} type="button" class="inline-flex w-full justify-center items-center gap-x-1.5 rounded-md bg-gray-900 px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs hover:bg-gray-50" id="menu-button" aria-expanded="true" aria-haspopup="true">
+    <img src={userD.profile == ''?"https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg" :`${serverUrl}/upload/${userD.profile}`}alt="no image" style={{width:'50px',height:'50px'}} className='mx-2 rounded-full'  />   
 
-    <img src="https://thumb.ac-illust.com/51/51e1c1fc6f50743937e62fca9b942694_t.jpeg" alt="no image" style={{width:'50px',height:'50px'}} className='mx-2'  />   
     </button>
   </div>
 
@@ -92,7 +108,7 @@ useEffect(()=>{
     <div className="py-1" role="none">
      
       <Link to={'/profile'}><p className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="menu-item-0"> <FontAwesomeIcon icon={faAddressCard} className='me-2' />Profile</p></Link>
-      <button className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="menu-item-1"><FontAwesomeIcon icon={faPowerOff} className='me-2' />Logout</button>
+      <button onClick={logout} className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="menu-item-1"><FontAwesomeIcon icon={faPowerOff} className='me-2' />Logout</button>
      
     </div>
   </div>}
