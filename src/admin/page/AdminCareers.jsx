@@ -60,48 +60,13 @@ const handleSubmit = async ()=>{
   }
 }
 
-// const handleSubmit = ()=>{
-// // console.log(jobForm)
-// // // addjob(jobForm)
-// // handleReset()
-// //  setModalStatus(false)
-// if (jobForm.title && jobForm.location) {
-//     addjob(jobForm);
-//   } 
-//   else {
-//     toast.error("Please fill in required fields");
-//   }
-// }
-
 const handleReset = ()=>{
   setjobForm({
     title:"", location:"", jType:"", salary:"", qualification:"", experience:"", description:""
   })
 }
 
-// const addjob = async (data)=>{
 
-//   try {
-//     const result = await addJobApi(data)
-//   console.log(result);
-
-//   if(result.status == 200){
-//     toast.success('Job added Successfully')
-//     setModalStatus(false)
-//     handleReset()
-//   }
-//   else if(result.status == 400){
-//     toast.warning(result.response.data)
-//     handleReset()
-//   }
-//   else{
-//     toast.error('something went wrong')
-//   }
-//   } catch (error) {
-//     res.status(500).json(error)
-//   }
-  
-// }
 
 //getjob
 const getAllJobs = async(searchKey)=>{
@@ -258,9 +223,9 @@ else{
               <input type="text" placeholder='Job Title' className='px-4 py-2 border border-gray-400 placeholder-gray-400 md:w-1/4 w-1/2 shadow' />
               <button className='bg-green-700 text-white px-4 py-2 shadow hover:border hover:border-green-700 hover:text-green-700 hover:bg-white'>Search</button>
             </div>
-            <div className ='overflow-x-auto'>
+            <div >
              <div className='flex justify-center items-center'>
-                {allapplication?.length>0?<table className='mx-5 my-5 w-full border border-gray-400'>
+                {allapplication?.length>0?<table className='mx-5 my-5 w-full border border-gray-400 overflow-x-auto'>
                   <thead>
                     <tr className='text-white bg-blue-600'>
                       <th className='p-3 border border-gray-500'>Sl.no</th>
