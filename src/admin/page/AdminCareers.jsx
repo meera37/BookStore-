@@ -224,8 +224,8 @@ else{
               <button className='bg-green-700 text-white px-4 py-2 shadow hover:border hover:border-green-700 hover:text-green-700 hover:bg-white'>Search</button>
             </div>
             <div >
-             <div className='flex justify-center items-center'>
-                {allapplication?.length>0?<table className='mx-5 my-5 w-full border border-gray-400 overflow-x-auto'>
+             <div className='flex justify-center items-center overflow-x-auto'>
+                {allapplication?.length>0?<table className='mx-5 my-5 w-full border border-gray-400'>
                   <thead>
                     <tr className='text-white bg-blue-600'>
                       <th className='p-3 border border-gray-500'>Sl.no</th>
