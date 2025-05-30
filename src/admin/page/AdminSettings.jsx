@@ -122,13 +122,13 @@ function AdminSettings() {
   return (
     <>
       <AdminHeader />
-      <div className='md:grid grid-cols-[1fr_4fr]'>
+      <div className='md:grid grid-cols-[1fr_4fr] '>
         <div className='bg-blue-200 flex flex-col items-center p-5'>
           <AdminSidebar />
         </div>
 
         <div>
-          <h1 className='font-medium text-3xl text-center'>Settings</h1>
+          <h1 className='font-medium text-3xl text-center mt-5'>Settings</h1>
 
           <div>
             <div className='md:grid grid-cols-2 w-full  items-start gap-10 px-10 py-8'>

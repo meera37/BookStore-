@@ -258,38 +258,42 @@ else{
               <input type="text" placeholder='Job Title' className='px-4 py-2 border border-gray-400 placeholder-gray-400 md:w-1/4 w-1/2 shadow' />
               <button className='bg-green-700 text-white px-4 py-2 shadow hover:border hover:border-green-700 hover:text-green-700 hover:bg-white'>Search</button>
             </div>
-            {allapplication?.length>0?<table className='mx-5 my-5 w-full border border-gray-400'>
-              <thead>
-                <tr className='text-white bg-blue-600'>
-                  <th className='p-3 border border-gray-500'>Sl.no</th>
-                  <th className='p-3 border border-gray-500'>Job Title</th>
-                  <th className='p-3 border border-gray-500'>Name</th>
-                  <th className='p-3 border border-gray-500'>Qualification</th>
-                  <th className='p-3 border border-gray-500'>Email</th>
-                  <th className='p-3 border border-gray-500'>Phone</th>
-                  <th className='p-3 border border-gray-500'>Cover letter</th>
-                  <th className='p-3 border border-gray-500'>Resume</th>
-                </tr>
-              </thead>
-              <tbody>
-                
-                { allapplication?.map((item, index)=>(
-<tr key={index}>
-                  <td className='border border-gray-500 p-2'>{index+1}</td>
-                  <td className='border border-gray-500 p-2'>{item?.jobtitle}</td>
-                  <td className='border border-gray-500 p-2'>{item?.fullname}</td>
-                  <td className='border border-gray-500 p-2'>{item?.qualification}</td>
-                  <td className='border border-gray-500 p-2'>{item?.email}</td>
-                  <td className='border border-gray-500 p-2'>{item?.phone}</td>
-                  <td className='border border-gray-500 p-2'>{item?.coverletter}</td>
-                  <td className='border border-gray-500 p-2'><Link to={`${serverUrl}/pdfUploads/${item?.resume}`} className='text-blue-600 underline' target='_blank'>resume</Link></td>
-
-                </tr>
-                ))}
-              </tbody>
-            </table> :
-            <p>No application yet</p>
-            }
+            <div className ='overflow-x-auto'>
+             <div className='flex justify-center items-center'>
+                {allapplication?.length>0?<table className='mx-5 my-5 w-full border border-gray-400'>
+                  <thead>
+                    <tr className='text-white bg-blue-600'>
+                      <th className='p-3 border border-gray-500'>Sl.no</th>
+                      <th className='p-3 border border-gray-500'>Job Title</th>
+                      <th className='p-3 border border-gray-500'>Name</th>
+                      <th className='p-3 border border-gray-500'>Qualification</th>
+                      <th className='p-3 border border-gray-500'>Email</th>
+                      <th className='p-3 border border-gray-500'>Phone</th>
+                      <th className='p-3 border border-gray-500'>Cover letter</th>
+                      <th className='p-3 border border-gray-500'>Resume</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    
+                    { allapplication?.map((item, index)=>(
+    <tr key={index}>
+                      <td className='border border-gray-500 p-2'>{index+1}</td>
+                      <td className='border border-gray-500 p-2'>{item?.jobtitle}</td>
+                      <td className='border border-gray-500 p-2'>{item?.fullname}</td>
+                      <td className='border border-gray-500 p-2'>{item?.qualification}</td>
+                      <td className='border border-gray-500 p-2'>{item?.email}</td>
+                      <td className='border border-gray-500 p-2'>{item?.phone}</td>
+                      <td className='border border-gray-500 p-2'>{item?.coverletter}</td>
+                      <td className='border border-gray-500 p-2'><Link to={`${serverUrl}/pdfUploads/${item?.resume}`} className='text-blue-600 underline' target='_blank'>resume</Link></td>
+    
+                    </tr>
+                    ))}
+                  </tbody>
+                </table> :
+                <p>No application yet</p>
+                }
+             </div>
+            </div>
           </div>}
         </div>
       </div>
