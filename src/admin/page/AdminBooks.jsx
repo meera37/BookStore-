@@ -86,7 +86,7 @@ const [allusers, setallusers] = useState([])
   return (
     <>
       <AdminHeader />
-      <div className='grid grid-cols-[1fr_4fr]'>
+      <div className='md:grid grid-cols-[1fr_4fr]'>
         <div className='bg-blue-200 flex flex-col items-center p-5'>
           <AdminSidebar />
         </div>
@@ -131,7 +131,7 @@ const [allusers, setallusers] = useState([])
 
 
           {/* users */}
-          {usersstatus && <div className="grid grid-cols-3 my-10 mx-5">
+          {usersstatus && <div className="md:grid grid-cols-3 gap-5 my-10 mx-5">
             {
               allusers?.length>0?
               allusers?.map((user)=>(

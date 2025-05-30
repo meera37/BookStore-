@@ -109,7 +109,7 @@ const data02 = [
                 </div>
                 <div className='p-10'>
                     <div className="md:grid grid-cols-3">
-                        <div className='px-5'>
+                        <div className='px-5 mt-3 md:mt-0'>
                             <div className='bg-blue-900 p-3 flex rounded text-white'>
                                 <FontAwesomeIcon icon={faBook} className='fa-3x' />
                                 <div className='text-center px-3'>
@@ -120,7 +120,7 @@ const data02 = [
                         </div>
                         
                         
-                        <div className='px-5'>
+                        <div className='px-5 mt-3 md:mt-0'>
                             <div className='bg-green-900 p-3 flex justify-evenly rounded text-white'>
                                 <FontAwesomeIcon icon={faUsers} className='fa-2x' />
                                 <div className='text-center px-3'>
@@ -131,7 +131,7 @@ const data02 = [
                         </div>
                         
                         
-                        <div className='px-5'>
+                        <div className='px-5 mt-3 md:mt-0'>
                             <div className='bg-amber-500 p-3 flex justify-evenly rounded text-white'>
                                 <FontAwesomeIcon icon={faUserTie} className='fa-2x' />
                                 <div className='text-center px-3'>

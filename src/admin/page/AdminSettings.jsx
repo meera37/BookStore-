@@ -122,7 +122,7 @@ function AdminSettings() {
   return (
     <>
       <AdminHeader />
-      <div className='grid grid-cols-[1fr_4fr]'>
+      <div className='md:grid grid-cols-[1fr_4fr]'>
         <div className='bg-blue-200 flex flex-col items-center p-5'>
           <AdminSidebar />
         </div>
